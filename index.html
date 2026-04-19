@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmileSync — Sistemi Inteligjent për Klinika Dentare</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #0d9e6e;
+    --green-light: #e6f7f1;
+    --green-dark: #086b4a;
+    --red: #e63946;
+    --cream: #faf8f4;
+    --dark: #111714;
+    --gray: #6b7280;
+    --border: #e5e7eb;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--dark);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.7} }
+  .nav-cta {
+    background: var(--dark); color: white;
+    padding: 0.55rem 1.4rem; border-radius: 50px;
+    font-size: 0.85rem; font-weight: 500;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--green); transform: translateY(-1px); }
+
+  /* HERO — PAIN SECTION */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 7rem 2.5rem 4rem;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(13,158,110,0.07) 0%, transparent 70%);
+  }
+
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+    max-width: 1100px; margin: 0 auto; position: relative; z-index: 1;
+  }
+
+  .pain-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff3f3; border: 1px solid #fca5a5;
+    color: var(--red); font-size: 0.78rem; font-weight: 500;
+    padding: 5px 14px; border-radius: 50px; margin-bottom: 1.5rem;
+    animation: fadeSlideDown 0.6s ease both;
+  }
+  .pain-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 900; line-height: 1.15;
+    color: var(--dark);
+    animation: fadeSlideDown 0.7s 0.1s ease both;
+  }
+  .hero h1 em { font-style: normal; color: var(--green); }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--gray);
+    line-height: 1.7; margin: 1.5rem 0 2rem;
+    font-weight: 300;
+    animation: fadeSlideDown 0.7s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    animation: fadeSlideDown 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--green); color: white;
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-size: 0.95rem; font-weight: 500;
+    border: none; cursor: pointer;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+    box-shadow: 0 4px 20px rgba(13,158,110,0.3);
+  }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(13,158,110,0.4); }
+
+  .btn-ghost {
+    background: transparent; color: var(--dark);
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-size: 0.95rem; font-weight: 500;
+    border: 1.5px solid var(--border); cursor: pointer;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+  /* PAIN CARD */
+  .pain-card {
+    background: white; border-radius: 20px;
+    padding: 2rem; border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    animation: fadeSlideLeft 0.8s 0.2s ease both;
+  }
+  .pain-card-title {
+    font-size: 0.78rem; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--gray); margin-bottom: 1.2rem;
+  }
+  .pain-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 0.85rem 0; border-bottom: 1px solid var(--border);
+  }
+  .pain-item:last-child { border-bottom: none; }
+  .pain-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #fff3f3; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0; margin-top: 2px;
+  }
+  .pain-text { font-size: 0.9rem; color: var(--dark); line-height: 1.5; }
+  .pain-text span { display: block; font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+  .pain-cost {
+    margin-top: 1.2rem; padding: 1rem;
+    background: #fff3f3; border-radius: 12px;
+    border: 1px solid #fca5a5;
+  }
+  .pain-cost-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--red); }
+  .pain-cost-label { font-size: 0.8rem; color: var(--red); margin-top: 2px; opacity: 0.8; }
+
+  /* SOLUTION SECTION */
+  .section { padding: 6rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.78rem; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--green); margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700; line-height: 1.2; margin-bottom: 1rem;
+  }
+  .section-sub { font-size: 1rem; color: var(--gray); max-width: 500px; line-height: 1.7; font-weight: 300; }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .feat-card {
+    background: white; border-radius: 16px; padding: 1.8rem;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0; transform: translateY(20px);
+  }
+  .feat-card.visible { animation: fadeSlideUp 0.5s ease forwards; }
+  .feat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+  .feat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900;
+    color: var(--green-light); line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+  .feat-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .feat-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.6; }
+
+  /* COMPARISON */
+  .comparison-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .comp-col { border-radius: 16px; overflow: hidden; }
+  .comp-header {
+    padding: 1.2rem 1.5rem; font-size: 0.85rem; font-weight: 500;
+  }
+  .comp-col.before .comp-header { background: #fef2f2; color: var(--red); }
+  .comp-col.after .comp-header { background: var(--green-light); color: var(--green-dark); }
+  .comp-body { background: white; border: 1px solid var(--border); border-top: none; }
+  .comp-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-icon { flex-shrink: 0; margin-top: 2px; font-size: 14px; }
+
+  /* STATS */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .stat-card {
+    background: var(--dark); color: white;
+    border-radius: 16px; padding: 2rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem; font-weight: 900;
+    color: #6ee7b7; line-height: 1;
+  }
+  .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+  /* HOW IT WORKS */
+  .steps { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+  .step {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    opacity: 0; transform: translateX(-20px);
+  }
+  .step.visible { animation: fadeSlideRight 0.5s ease forwards; }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--green); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-content h3 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+  .step-content p { font-size: 0.88rem; color: var(--gray); line-height: 1.6; }
+
+  /* CTA / VALIDATION SECTION */
+  .cta-section {
+    background: var(--dark); color: white;
+    padding: 6rem 2.5rem; text-align: center;
+  }
+  .cta-inner { max-width: 600px; margin: 0 auto; }
+  .cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 900; margin-bottom: 1rem; line-height: 1.2;
+  }
+  .cta-section h2 em { font-style: normal; color: #6ee7b7; }
+  .cta-section p { color: rgba(255,255,255,0.6); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.7; }
+
+  /* VOTE */
+  .vote-btns { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+  .vote-yes {
+    background: var(--green); color: white;
+    padding: 1rem 2.5rem; border-radius: 50px; border: none;
+    font-size: 1rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 20px rgba(13,158,110,0.4);
+  }
+  .vote-yes:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(13,158,110,0.5); }
+  .vote-no {
+    background: transparent; color: rgba(255,255,255,0.6);
+    padding: 1rem 2.5rem; border-radius: 50px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    font-size: 1rem; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .vote-no:hover { border-color: rgba(255,255,255,0.5); color: white; }
+
+  /* FORM */
+  .signup-form { display: none; flex-direction: column; gap: 12px; max-width: 380px; margin: 0 auto; }
+  .signup-form.show { display: flex; animation: fadeSlideUp 0.4s ease both; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .signup-form input {
+    background: rgba(255,255,255,0.08); color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px; padding: 0.8rem 1rem;
+    font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s; outline: none;
+  }
+  .signup-form input::placeholder { color: rgba(255,255,255,0.35); }
+  .signup-form input:focus { border-color: var(--green); }
+  .form-submit {
+    background: var(--green); color: white; border: none;
+    border-radius: 10px; padding: 0.9rem;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .form-submit:hover { background: var(--green-dark); }
+  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* PROGRESS */
+  .progress-wrap { margin-top: 2rem; display: none; }
+  .progress-wrap.show { display: block; animation: fadeSlideUp 0.4s ease both; }
+  .progress-label { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+  .progress-bar { background: rgba(255,255,255,0.1); border-radius: 99px; height: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), #6ee7b7); border-radius: 99px; transition: width 0.6s ease; width: 0%; }
+  .progress-count { font-size: 1.4rem; font-weight: 500; margin-top: 10px; color: white; }
+  .progress-count span { color: #6ee7b7; font-family: 'Playfair Display', serif; }
+
+  /* SUCCESS / NO MSG */
+  .msg-success, .msg-no {
+    display: none; padding: 1.2rem 1.5rem;
+    border-radius: 12px; font-size: 0.9rem;
+    max-width: 380px; margin: 0 auto;
+  }
+  .msg-success { background: rgba(13,158,110,0.15); border: 1px solid rgba(13,158,110,0.3); color: #6ee7b7; }
+  .msg-no { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 2.5rem; text-align: center;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem; color: var(--gray);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeSlideDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeSlideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeSlideLeft { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes fadeSlideRight { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+
+  /* RESPONSIVE */
+  @media(max-width: 768px) {
+    .hero-grid, .comparison-wrap { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .hero, .section { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    SmileSync
+  </div>
+  <a href="#cta" class="nav-cta">Provoje Falas</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid">
+    <div>
+      <div class="pain-tag">Problemi real i çdo klinike dentare</div>
+      <h1>Sa pacientë <em>nuk erdhën</em> sot pa njoftuar?</h1>
+      <p class="hero-sub">
+        Çdo ditë dentistët shqiptarë humbasin orë pune duke telefonuar pacientët, duke shkruar në WhatsApp, dhe duke pritur — pa asnjë garanci.
+      </p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">Dua ta provoj falas &rarr;</a>
+        <a href="#solution" class="btn-ghost">Si funksionon?</a>
+      </div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-card-title">Ditë tipike pa SmileSync</div>
+      <div class="pain-item">
+        <div class="pain-icon">📞</div>
+        <div class="pain-text">
+          Telefononi çdo pacient me dorë
+          <span>~45 minuta në ditë, çdo ditë</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">💬</div>
+        <div class="pain-text">
+          WhatsApp manual për kujtesa
+          <span>Mesazhe të harruara, përgjigje pa fund</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">😤</div>
+        <div class="pain-text">
+          Pacientë që nuk vijnë pa njoftim
+          <span>20% no-show = karrige bosh, kohë e humbur</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⭐</div>
+        <div class="pain-text">
+          Asnjë review online
+          <span>Pacientët e kënaqur nuk e dinë ku ta shkruajnë</span>
+        </div>
+      </div>
+      <div class="pain-cost">
+        <div class="pain-cost-num">~30,000 L</div>
+        <div class="pain-cost-label">humbje mujore nga no-shows (50 pacientë × 20%)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<div id="solution">
+<div class="section">
+  <div class="section-label">Zgjidhja</div>
+  <h2 class="section-title">SmileSync e bën gjithçka<br>ndërsa ju punoni</h2>
+  <p class="section-sub">Pa trajnim. Pa kompleksitet. Hap llogarinë dhe brenda 5 minutash sistemi punon vetë.</p>
+
+  <div class="comparison-wrap">
+    <div class="comp-col before">
+      <div class="comp-header">❌ Para SmileSync</div>
+      <div class="comp-body">
+        <div class="comp-row"><span class="comp-icon">😓</span>Telefonata manuale çdo mëngjes</div>
+        <div class="comp-row"><span class="comp-icon">😓</span>WhatsApp kaotik me pacientët</div>
+        <div class="comp-row"><span class="comp-icon">😓</span>No-shows pa paralajmërim</div>
+        <div class="comp-row"><span class="comp-icon">😓</span>Asnjë feedback i organizuar</div>
+        <div class="comp-row"><span class="comp-icon">😓</span>Zero Google reviews</div>
+        <div class="comp-row"><span class="comp-icon">😓</span>Trajnim i gjatë për çdo software</div>
+      </div>
+    </div>
+    <div class="comp-col after">
+      <div class="comp-header">✅ Me SmileSync</div>
+      <div class="comp-body">
+        <div class="comp-row"><span class="comp-icon">✓</span>Kujtesa automatike — email + SMS</div>
+        <div class="comp-row"><span class="comp-icon">✓</span>Konfirmime dhe riplanifikime vetë</div>
+        <div class="comp-row"><span class="comp-icon">✓</span>No-shows ulen deri 80%</div>
+        <div class="comp-row"><span class="comp-icon">✓</span>Feedback automatik pas çdo vizite</div>
+        <div class="comp-row"><span class="comp-icon">✓</span>Klientët dërgohen direkt te Google</div>
+        <div class="comp-row"><span class="comp-icon">✓</span>Plug & play — 5 minuta setup</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section" style="padding-top:0">
+  <div class="section-label">Funksionalitetet</div>
+  <h2 class="section-title">Gjithçka që duhet,<br>asgjë e tepërt</h2>
+  <div class="features-grid" id="featGrid">
+    <div class="feat-card">
+      <div class="feat-num">01</div>
+      <h3>Kujtesa automatike</h3>
+      <p>Email dhe SMS 24 orë para takimit. Pacienti konfirmon me një klik. Ju nuk bëni asgjë.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">02</div>
+      <h3>Caktim oraresh online</h3>
+      <p>Pacientët rezervojnë vetë 24/7 nga telefoni. Oraret sinkronizohen automatikisht.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">03</div>
+      <h3>Feedback & Review</h3>
+      <p>Pas çdo vizite sistemi pyet pacientin. Të kënaqurit dërgohen direkt te Google Reviews.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">04</div>
+      <h3>AI i personalizuar</h3>
+      <p>Mesazhet janë të personalizuara me emrin, shërbimin, dhe historikun e çdo pacienti.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="section" style="padding-top:0">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">80%</div>
+      <div class="stat-label">ulje e no-shows brenda muajit të parë</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">5 min</div>
+      <div class="stat-label">setup total — plug and play</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">3 muj</div>
+      <div class="stat-label">falas — pa kartë krediti</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section" style="padding-top:0">
+  <div class="section-label">Si funksionon</div>
+  <h2 class="section-title">Tre hapa, gjithçka gati</h2>
+  <div class="steps" id="stepsWrap">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Regjistrohu dhe lidh klinikën</h3>
+        <p>Krijo llogarinë dhe importo kontaktet e pacientëve tuaj. CSV ose manual — 5 minuta gjithsej.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Sistemi punon vetë</h3>
+        <p>SmileSync dërgon kujtesa, mbledh konfirmime, dhe organizon oraret — pa ndërhyrjen tuaj.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Ju shihni rezultatet</h3>
+        <p>Dashboard i thjeshtë: pacientë, konfirmime, feedback, reviews. Gjithçka në një vend.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner">
+    <h2>A do ta provonit <em>SmileSync</em> në klinikën tuaj?</h2>
+    <p>Votoni sinqerisht. Nëse 5 dentistë thonë po — e lansojmë brenda javës me akses beta falas.</p>
+
+    <div class="vote-btns" id="voteBtns">
+      <button class="vote-yes" onclick="vote('yes')">Po, e provoj falas &rarr;</button>
+      <button class="vote-no" onclick="vote('no')">Jo, nuk më duhet</button>
+    </div>
+
+    <form class="signup-form" id="signupForm" onsubmit="submitForm(event)">
+      <div class="form-row">
+        <input type="text" id="firstName" placeholder="Emri (Dr. Agim)" required />
+        <input type="text" id="lastName" placeholder="Mbiemri" />
+      </div>
+      <input type="email" id="emailField" placeholder="Email i klinikës" required />
+      <input type="text" id="clinicName" placeholder="Emri i klinikës (opsionale)" />
+      <button type="submit" class="form-submit" id="submitBtn">Rezervo aksesin beta falas</button>
+    </form>
+
+    <div class="msg-success" id="msgSuccess">
+      Faleminderit! Ju kemi shtuar në listën beta. Do t'ju kontaktojmë me aksesin tuaj personal.
+    </div>
+    <div class="msg-no" id="msgNo">
+      Faleminderit për sinqeritetin. Nëse ndërroni mendim, jeni gjithmonë të mirëpritur.
+    </div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label" id="progressLabel">0 dentistë kanë votuar</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count">Interesim: <span id="yesNum">0</span> / 5 për lansim</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 SmileSync &mdash; Ndërtuar me kujdes për klinika dentare shqiptare &mdash; 
+  <a href="mailto:info@smilesync.al" style="color:var(--green);text-decoration:none;">info@smilesync.al</a>
+</footer>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = (i * 0.1) + 's';
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.feat-card, .step').forEach(el => observer.observe(el));
+
+  // Vote state
+  let yesCount = 0, noCount = 0;
+
+  function vote(type) {
+    document.getElementById('voteBtns').style.display = 'none';
+    document.getElementById('progressWrap').classList.add('show');
+
+    if (type === 'yes') {
+      yesCount++;
+      document.getElementById('signupForm').classList.add('show');
+    } else {
+      noCount++;
+      document.getElementById('msgNo').style.display = 'block';
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = yesCount + noCount;
+    const pct = Math.min((yesCount / 5) * 100, 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('yesNum').textContent = yesCount;
+    document.getElementById('progressLabel').textContent =
+      total + (total === 1 ? ' dentist votoi' : ' dentistë votuan') + ' deri tani';
+  }
+
+  async function submitForm(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Duke dërguar...';
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('emailField').value.trim();
+    const clinic = document.getElementById('clinicName').value.trim();
+
+    try {
+      const res = await fetch('https://neuromail.app/api/webhook/8d57e56c032c6099fa18bf872bee5a9d/contact/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+          organization: clinic || 'Klinikë Dentare',
+          group_name: 'SmileSyncGithub'
+        })
+      });
+      const data = await res.json();
+
+      document.getElementById('signupForm').style.display = 'none';
+      if (data.success) {
+        document.getElementById('msgSuccess').style.display = 'block';
+      } else {
+        document.getElementById('msgSuccess').style.display = 'block';
+      }
+    } catch (err) {
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('msgSuccess').style.display = 'block';
+    }
+
+    updateProgress();
+  }
+
+  // Smooth number counter animation for stats
+  function animateCount(el, target, suffix) {
+    let current = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.round(current) + suffix;
+      if (current >= target) clearInterval(timer);
+    }, 30);
+  }
+
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const nums = entry.target.querySelectorAll('.stat-num');
+        animateCount(nums[0], 80, '%');
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsRow = document.querySelector('.stats-row');
+  if (statsRow) statsObserver.observe(statsRow);
+</script>
+</body>
+</html>
