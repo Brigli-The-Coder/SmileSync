@@ -531,11 +531,6 @@
       Faleminderit për sinqeritetin. Nëse ndërroni mendim, jeni gjithmonë të mirëpritur.
     </div>
 
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-label" id="progressLabel">0 dentistë kanë votuar</div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-count">Interesim: <span id="yesNum">0</span> / 5 për lansim</div>
-    </div>
   </div>
 </section>
 
@@ -572,16 +567,6 @@
       noCount++;
       document.getElementById('msgNo').style.display = 'block';
     }
-    updateProgress();
-  }
-
-  function updateProgress() {
-    const total = yesCount + noCount;
-    const pct = Math.min((yesCount / 5) * 100, 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('yesNum').textContent = yesCount;
-    document.getElementById('progressLabel').textContent =
-      total + (total === 1 ? ' dentist votoi' : ' dentistë votuan') + ' deri tani';
   }
 
   async function submitForm(e) {
@@ -619,8 +604,6 @@
       document.getElementById('signupForm').style.display = 'none';
       document.getElementById('msgSuccess').style.display = 'block';
     }
-
-    updateProgress();
   }
 
 </script>
