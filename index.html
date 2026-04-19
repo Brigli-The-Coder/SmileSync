@@ -510,7 +510,7 @@
     <p>Votoni sinqerisht.</p>
 
     <div class="vote-btns" id="voteBtns">
-      <button class="vote-yes" onclick="vote('yes')">Po</button>
+      <button class="vote-yes" onclick="vote('yes')">Po &rarr;</button>
       <button class="vote-no" onclick="vote('no')">Jo</button>
     </div>
 
@@ -623,29 +623,6 @@
     updateProgress();
   }
 
-  // Smooth number counter animation for stats
-  function animateCount(el, target, suffix) {
-    let current = 0;
-    const step = target / 40;
-    const timer = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = Math.round(current) + suffix;
-      if (current >= target) clearInterval(timer);
-    }, 30);
-  }
-
-  const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const nums = entry.target.querySelectorAll('.stat-num');
-        animateCount(nums[0], 80, '%');
-        statsObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
-
-  const statsRow = document.querySelector('.stats-row');
-  if (statsRow) statsObserver.observe(statsRow);
 </script>
 </body>
 </html>
